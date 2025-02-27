@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Phudu:wght@300..900&display=swap');
+@import "tailwindcss";
+
+
+body[data-theme="light"]{
+  background-image: url("./assets/gradientBg.jpg");
+  background-position: center;
+  color: black;
+}
+body[data-theme="dark"]{
+  background-image: url("./assets/darkBg2.jpg");
+  background-position: center;
+  color: white;
+}
+.primary-font{
+  font-family: "Phudu", serif;
+}
+.secondary-font{
+  font-family: "Jost" ,serif;
+}
