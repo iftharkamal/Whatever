@@ -17,6 +17,7 @@ const Home = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [draggedColor, setDraggedColor] = useState("");
+    const [tempCard,setTempCard] = useState(false);
     const [noteTitle, setNoteTitle] = useState("");
     const [noteDescription, setNoteDescription] = useState("");
     const [editingId, setEditingId] = useState(null);
@@ -32,11 +33,22 @@ const Home = () => {
     setDraggedColor(color); // Save the dragged sphere's color
   };
 
+
+  const handleDragOver = (e) =>{
+    e.preventDefault();
+    setTempCard(true)
+  }
+   
+  const handleDragLeave = () =>{
+    setTempCard(false)
+  }
+
   const handleDrop = (e) => {
     e.preventDefault();
     setEditingId(null);
     setNoteTitle("");
     setNoteDescription("");
+    setTempCard(false)
     setIsModalOpen(true);
   };
 
@@ -76,6 +88,8 @@ const Home = () => {
     };
     fetchNotes();
   }, []);
+
+  
 
   const saveNote = async () => {
     if (noteTitle.trim() && noteDescription.trim()) {
@@ -201,22 +215,34 @@ const Home = () => {
         <ColorPicker colors={colors} handleDragStart={handleDragStart} />
 
         {/* Main Drop Area */}
-        <div className="w-[98%] flex flex-col items-center justify-center">
+        <div onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop} className="w-[98%] flex flex-col items-center justify-center">
           {/* Headline */}
           <h1 className="primary-font text-2xl font-semibold mt-6">Whatever</h1>
           {/* Search Bar */}
-          <div className="mt-6 mb-10 w-full flex justify-center items-center">
+          <div className="mt-6 mb-10 w-full flex justify-center items-center gap-2">
             <SearchBar/>
             <button onClick={() => dispatch(toggleTheme())} className={`p-3 text-2xl rounded-full text-white ${theme === "dark"? "bg-gray-700":"bg-gray-400"}`}>{theme === "dark"? <TbBulbFilled/>: <TbBulb/>}</button>
           </div>
+
+         {/* Temporary Notes Card while dragging
+           {tempCard && (
+            <div onDrag={handleDrag}  style={{ backgroundColor: draggedColor, top: tempCardPosition.y -20, left:tempCardPosition.x -100, pointerEvents:"none" }} className="text-white p-4 rounded-md shadow-sm w-[250px] h-[200px] relative hover:shadow-black/70 hover:shadow-xl">
+               <h3 className="font-semibold text-lg text-white/70">
+                New Note
+              </h3>
+              <hr className="text-white/70 mb-3" />
+              <p className="text-sm">Drop to Add...</p>
+            </div>
+          )} */}
+
+
+
           {/* Notes Area */}
-          <div
-            className="flex flex-wrap gap-3 w-full h-full py-7"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleDrop}
-          >
+          <div onDrop={(e)=> e.preventDefault()} className="flex flex-wrap gap-3 w-full h-full py-7 ">
             {pinnedNotes.length > 0 && (
-              <NotesSection
+              <NotesSection 
                 title="PINNED"
                 notes={pinnedNotes}
                 onNoteClick={handleNoteClick}
@@ -233,8 +259,11 @@ const Home = () => {
 
             <NotesSection
               title="OTHERS"
-              notes={otherNotes}
-              onNoteClick={handleNoteClick}
+              notes={otherNotes? [...otherNotes, ...(tempCard ? [{id:"temp", color:draggedColor}] : [])] : []}
+              onNoteClick={(note) => {
+                if (note.id === "temp") return;
+                handleNoteClick(note._id, note.title, note.description)
+              }}
               onTogglePin={togglePin}
               onDelete={deleteNotes}
               labelInputVisible={labelInputVisible}

@@ -1,20 +1,18 @@
-import React from 'react'
+import React from "react";
 import { TbPinned, TbPinnedFilled } from "react-icons/tb";
 import { MdDelete, MdLabelImportantOutline } from "react-icons/md";
 
-
-
 const NoteCard = ({
-    note,
-    onClick,
-    onTogglePin,
-    onDelete,
-    labelInputVisible,
-    setLabelInputVisible,
-    newLabel,
-    setNewLabel,
-    handleAddLabel,
-    handleRemoveLabel,
+  note,
+  onClick,
+  onTogglePin,
+  onDelete,
+  labelInputVisible,
+  setLabelInputVisible,
+  newLabel,
+  setNewLabel,
+  handleAddLabel,
+  handleRemoveLabel,
 }) => {
   return (
     <div
@@ -86,8 +84,8 @@ const NoteCard = ({
       {/* Label input field */}
       <div onClick={(e) => e.stopPropagation()}>
         {labelInputVisible === note._id && (
-          <div className="absolute -bottom-16 -right-1 shadow-md bg-black/50 p-5 text-sm rounded-3xl z-10">
-            <div className="w-[170px] flex px-2 py-1 border border-gray-600/60 rounded-md">
+          <div className="absolute -bottom-12 -right-0 w-[170px] shadow-md bg-black/50 p-3 text-sm rounded-xl z-10">
+            <div className=" flex items-center justify-between ">
               <input
                 type="text"
                 value={newLabel}
@@ -100,7 +98,7 @@ const NoteCard = ({
                   e.stopPropagation();
                   handleAddLabel(note._id);
                 }}
-                className="text-white/80 rounded-full text-xl bg-white/20 w-5 h-5 flex items-center justify-center cursor-pointer"
+                className="text-white/80 rounded-full text-lg bg-white/20 w-5 h-5 p-2 flex items-center justify-center cursor-pointer"
               >
                 +
               </button>
@@ -109,7 +107,7 @@ const NoteCard = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NoteCard
+export default NoteCard;
